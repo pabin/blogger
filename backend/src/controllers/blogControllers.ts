@@ -33,6 +33,7 @@ export const createBlogPosts: RequestHandler<
   const data: Partial<BlogPost> = req.body;
   data.id = uuidv4();
   data.date = new Date();
+  data.bookmarked = false;
 
   const fileExists = checkIfFileExists(filePath);
   if (!fileExists) {
@@ -55,7 +56,7 @@ export const createBlogPosts: RequestHandler<
   }
 };
 
-export const editBlogPosts: RequestHandler<
+export const editBlogPost: RequestHandler<
   { postId: string },
   Partial<BlogPost>,
   Partial<BlogPost>
@@ -82,7 +83,7 @@ export const editBlogPosts: RequestHandler<
   }
 };
 
-export const deleteBlogPosts: RequestHandler<
+export const deleteBlogPost: RequestHandler<
   { postId: string },
   { success: boolean },
   unknown
@@ -96,6 +97,33 @@ export const deleteBlogPosts: RequestHandler<
     const filteredPosts = blogPosts.filter((post) => post.id !== postId);
     try {
       await fs.writeFile(filePath, JSON.stringify(filteredPosts));
+      return res.json({ success: true });
+    } catch (err) {
+      next(err);
+    }
+  } catch (err) {
+    next(err);
+  }
+  return res.json({ success: false });
+};
+
+export const bookmarkBlogPost: RequestHandler<
+  { postId: string },
+  { success: boolean },
+  unknown
+> = async (req, res, next) => {
+  const { postId } = req.params;
+
+  try {
+    const postsData = await fs.readFile(filePath, "utf8");
+    const blogPosts: BlogPost[] = JSON.parse(postsData);
+
+    const updatedPosts = blogPosts.map((post) =>
+      post.id === postId ? { ...post, bookmarked: !post.bookmarked } : post
+    );
+
+    try {
+      await fs.writeFile(filePath, JSON.stringify(updatedPosts));
       return res.json({ success: true });
     } catch (err) {
       next(err);
