@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { v4 as uuidv4 } from "uuid";
-import fs from "node:fs/promises";
+import { promises as fs } from "node:fs";
 
 import { BlogPost } from "../types/BlogPost";
 import { checkIfFileExists } from "../utils/fsUtils";
@@ -13,6 +13,9 @@ export const getBlogPosts: RequestHandler<
   unknown,
   unknown
 > = async (req, res, next) => {
+  if (!checkIfFileExists(filePath)) {
+    return res.json([]);
+  }
   try {
     const data = await fs.readFile(filePath, "utf8");
     const blogPost: BlogPost[] = JSON.parse(data);
@@ -62,9 +65,9 @@ export const editBlogPosts: RequestHandler<
 
   try {
     const postsData = await fs.readFile(filePath, "utf8");
-    const blogPost: BlogPost[] = JSON.parse(postsData);
+    const blogPosts: BlogPost[] = JSON.parse(postsData);
 
-    const updatedPosts = blogPost.map((post) =>
+    const updatedPosts = blogPosts.map((post) =>
       post.id === postId ? { ...post, ...data } : post
     );
 
@@ -88,9 +91,9 @@ export const deleteBlogPosts: RequestHandler<
 
   try {
     const postsData = await fs.readFile(filePath, "utf8");
-    const blogPost: BlogPost[] = JSON.parse(postsData);
+    const blogPosts: BlogPost[] = JSON.parse(postsData);
 
-    const filteredPosts = blogPost.filter((post) => post.id !== postId);
+    const filteredPosts = blogPosts.filter((post) => post.id !== postId);
     try {
       await fs.writeFile(filePath, JSON.stringify(filteredPosts));
       return res.json({ success: true });
