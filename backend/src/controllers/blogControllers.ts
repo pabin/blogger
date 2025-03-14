@@ -8,7 +8,7 @@ import { checkIfFileExists } from "../utils/fsUtils";
 const filePath = "src/data/posts.json";
 
 export const getBlogPosts: RequestHandler<
-  { num: string },
+  unknown,
   BlogPost[],
   unknown,
   unknown
@@ -57,11 +57,11 @@ export const createBlogPosts: RequestHandler<
 };
 
 export const editBlogPost: RequestHandler<
-  { postId: string },
+  { id: string },
   Partial<BlogPost>,
   Partial<BlogPost>
 > = async (req, res, next) => {
-  const { postId } = req.params;
+  const { id } = req.params;
   const data: Partial<BlogPost> = req.body;
 
   try {
@@ -69,7 +69,7 @@ export const editBlogPost: RequestHandler<
     const blogPosts: BlogPost[] = JSON.parse(postsData);
 
     const updatedPosts = blogPosts.map((post) =>
-      post.id === postId ? { ...post, ...data } : post
+      post.id === id ? { ...post, ...data } : post
     );
 
     try {
@@ -84,17 +84,17 @@ export const editBlogPost: RequestHandler<
 };
 
 export const deleteBlogPost: RequestHandler<
-  { postId: string },
+  { id: string },
   { success: boolean },
   unknown
 > = async (req, res, next) => {
-  const { postId } = req.params;
+  const { id } = req.params;
 
   try {
     const postsData = await fs.readFile(filePath, "utf8");
     const blogPosts: BlogPost[] = JSON.parse(postsData);
 
-    const filteredPosts = blogPosts.filter((post) => post.id !== postId);
+    const filteredPosts = blogPosts.filter((post) => post.id !== id);
     try {
       await fs.writeFile(filePath, JSON.stringify(filteredPosts));
       return res.json({ success: true });
@@ -108,18 +108,18 @@ export const deleteBlogPost: RequestHandler<
 };
 
 export const bookmarkBlogPost: RequestHandler<
-  { postId: string },
+  { id: string },
   { success: boolean },
   unknown
 > = async (req, res, next) => {
-  const { postId } = req.params;
+  const { id } = req.params;
 
   try {
     const postsData = await fs.readFile(filePath, "utf8");
     const blogPosts: BlogPost[] = JSON.parse(postsData);
 
     const updatedPosts = blogPosts.map((post) =>
-      post.id === postId ? { ...post, bookmarked: !post.bookmarked } : post
+      post.id === id ? { ...post, bookmarked: !post.bookmarked } : post
     );
 
     try {

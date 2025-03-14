@@ -7,8 +7,7 @@ const port = 3000;
 
 app.use(json());
 
-app.use("/blogs", blogRoutes);
-app.use("/comments", commentRoutes);
+app.use("/posts", blogRoutes);
 
 app.get("/", (req, res) => {
   res.send("working fine!");

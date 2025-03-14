@@ -8,31 +8,37 @@ import { Comment } from "../types/Comment";
 const filePath = "src/data/comments.json";
 
 export const getComments: RequestHandler<
-  { num: string },
+  { id: string },
   Comment[],
   unknown,
   unknown
 > = async (req, res, next) => {
+  const { id } = req.params;
+
   if (!checkIfFileExists(filePath)) {
     return res.json([]);
   }
   try {
     const data = await fs.readFile(filePath, "utf8");
     const comments: Comment[] = JSON.parse(data);
-    return res.json(comments);
+    const postComments = comments.filter((comment) => comment.postId === id);
+    return res.json(postComments);
   } catch (err) {
     next(err);
   }
 };
 
 export const createComment: RequestHandler<
-  unknown,
+  { id: string },
   Comment,
   Partial<Comment>
 > = async (req, res, next) => {
+  const { id } = req.params;
+
   const data: Partial<Comment> = req.body;
   data.id = uuidv4();
   data.date = new Date();
+  data.postId = id;
 
   const fileExists = checkIfFileExists(filePath);
   if (!fileExists) {
@@ -56,17 +62,19 @@ export const createComment: RequestHandler<
 };
 
 export const deleteComment: RequestHandler<
-  { commentId: string },
+  { id: string; commentId: string },
   { success: boolean },
   unknown
 > = async (req, res, next) => {
-  const { commentId } = req.params;
+  const { id, commentId } = req.params;
 
   try {
     const commentData = await fs.readFile(filePath, "utf8");
     const comments: Comment[] = JSON.parse(commentData);
 
-    const filtered = comments.filter((comment) => comment.id !== commentId);
+    const filtered = comments.filter(
+      (c) => c.id !== commentId && c.postId === id
+    );
     try {
       await fs.writeFile(filePath, JSON.stringify(filtered));
       return res.json({ success: true });
