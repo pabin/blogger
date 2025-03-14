@@ -10,7 +10,6 @@ const filePath = "src/data/posts.json";
 export const getBlogPosts: RequestHandler<
   unknown,
   BlogPost[],
-  unknown,
   unknown
 > = async (req, res, next) => {
   if (!checkIfFileExists(filePath)) {
@@ -18,8 +17,8 @@ export const getBlogPosts: RequestHandler<
   }
   try {
     const data = await fs.readFile(filePath, "utf8");
-    const blogPost: BlogPost[] = JSON.parse(data);
-    return res.json(blogPost);
+    const blogPosts: BlogPost[] = JSON.parse(data);
+    return res.json(blogPosts);
   } catch (err) {
     next(err);
   }

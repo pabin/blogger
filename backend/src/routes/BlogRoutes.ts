@@ -11,6 +11,7 @@ import {
   deleteComment,
   getComments,
 } from "../controllers/commentControllers";
+import { searchBlogPosts } from "../controllers/searchControllers";
 
 export const blogRoutes = Router();
 
@@ -23,3 +24,5 @@ blogRoutes.patch("/:id/bookmark", bookmarkBlogPost);
 blogRoutes.get("/:id/comments", getComments);
 blogRoutes.post("/:id/comments", createComment);
 blogRoutes.delete("/:id/comments/:commentId", deleteComment);
+
+blogRoutes.get("/search", searchBlogPosts);
