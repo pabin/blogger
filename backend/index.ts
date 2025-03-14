@@ -1,5 +1,6 @@
 import express, { json } from "express";
-import { blogRoutes } from "./src/routes/BlogRoutes";
+import { blogRoutes } from "./src/routes/blogRoutes";
+import { commentRoutes } from "./src/routes/commentRoutes";
 
 const app = express();
 const port = 3000;
@@ -7,6 +8,7 @@ const port = 3000;
 app.use(json());
 
 app.use("/blogs", blogRoutes);
+app.use("/comments", commentRoutes);
 
 app.get("/", (req, res) => {
   res.send("working fine!");
