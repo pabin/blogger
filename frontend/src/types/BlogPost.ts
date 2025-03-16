@@ -10,9 +10,11 @@ export type BlogPost = {
 
 export type PostContextType = {
   posts: BlogPost[];
+  getPosts: () => Promise<void>;
   addPost: (post: Omit<BlogPost, "id">) => Promise<void>;
   editPost: (id: string, post: Omit<BlogPost, "id">) => Promise<void>;
-  // deletePost: (id: number) => Promise<void>;
+  deletePost: (id: string) => Promise<void>;
+  searchPosts: (query: string) => Promise<void>;
   loading: boolean;
   error: string | null;
 };

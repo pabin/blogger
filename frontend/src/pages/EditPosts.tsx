@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { toast } from "react-toastify";
 
 import { usePostContext } from "../context/PostsContext";
 import { BlogPost } from "../types/BlogPost";

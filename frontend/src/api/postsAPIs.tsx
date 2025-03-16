@@ -50,3 +50,12 @@ export const deletePostAPI = async (postId: string) => {
     console.log("err deleting post!!", err);
   }
 };
+
+export const searchPostAPI = async (query: string) => {
+  try {
+    const response = await fetch(`${HOST}/posts/search/?q=${query}`);
+    return await response.json();
+  } catch (err) {
+    console.log("err searching post!!", err);
+  }
+};
