@@ -6,6 +6,7 @@ import { usePostContext } from "../contexts/PostsContext";
 import Modal from "../components/Modal";
 import { slugify } from "../utils/slugify";
 import { visitedPostsAtom } from "../atoms";
+import Pagination from "../components/Pagination";
 
 const PostsList = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -24,7 +25,7 @@ const PostsList = () => {
 
   // console.log("postContext?.posts", postContext?.posts);
 
-  let postsToRender = postContext?.posts;
+  let postsToRender = postContext?.posts.data;
   if (postContext?.filteredPost.length) {
     postsToRender = postContext?.filteredPost;
   }
@@ -96,7 +97,7 @@ const PostsList = () => {
           </button>
         )}
 
-        <div className="w-128 flex gap-4">
+        <div className="w-8/12 flex gap-4">
           <div className="w-64">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Filter By Author
@@ -135,6 +136,13 @@ const PostsList = () => {
               ))}
             </select>
           </div>
+
+          <button
+            className="self-end bg-gray-300 text-gray-800 text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-400 cursor-pointer"
+            onClick={() => postContext?.filterPost("", "")}
+          >
+            clear filter
+          </button>
         </div>
 
         <table className="w-full text-left border-collapse">
@@ -216,6 +224,12 @@ const PostsList = () => {
             ))}
           </tbody>
         </table>
+
+        <Pagination
+          currentPage={postContext?.posts.currentPage}
+          totalPages={postContext?.posts.totalPages}
+          onPageChange={postContext?.getPosts}
+        />
       </div>
       <Modal
         isOpen={showModal}

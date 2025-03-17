@@ -8,12 +8,19 @@ export type BlogPost = {
   bookmarked: boolean;
 };
 
+export type BlogPostResponse = {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  data: BlogPost[];
+};
+
 export type PostContextType = {
-  posts: BlogPost[];
+  posts: BlogPostResponse;
   authors: string[];
   tags: string[];
   filteredPost: BlogPost[];
-  getPosts: () => Promise<void>;
+  getPosts: (page: number) => Promise<void>;
   addPost: (post: Omit<BlogPost, "id">) => Promise<void>;
   editPost: (id: string, post: Omit<BlogPost, "id">) => Promise<void>;
   deletePost: (id: string) => Promise<void>;

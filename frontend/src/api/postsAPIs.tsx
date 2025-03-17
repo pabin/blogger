@@ -2,9 +2,9 @@ import { BlogPost } from "../types/BlogPost";
 
 const HOST = "http://localhost:3000";
 
-export const getPostsAPI = async () => {
+export const getPostsAPI = async (page: number) => {
   try {
-    const response = await fetch(`${HOST}/posts`);
+    const response = await fetch(`${HOST}/posts/?page=${page}`);
     return await response.json();
   } catch (err) {
     console.log("err fetching posts!!", err);

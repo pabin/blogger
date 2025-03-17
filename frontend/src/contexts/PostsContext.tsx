@@ -6,7 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 
-import { BlogPost, PostContextType } from "../types/BlogPost";
+import { BlogPost, BlogPostResponse, PostContextType } from "../types/BlogPost";
 import {
   bookmarkPostAPI,
   createPostAPI,
@@ -21,22 +21,23 @@ const PostContext = createContext<PostContextType | null>(null);
 export type MyComponentProps = {
   children: ReactNode;
 };
+
 export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPostResponse>({ data: [] });
   const [filteredPost, setFilteredPost] = useState<BlogPost[]>([]);
   const [authors, setAuthors] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getPosts = async () => {
+  const getPosts = async (page: number) => {
     setLoading(true);
     try {
-      const postItems: BlogPost[] = await getPostsAPI();
-      setPosts(postItems);
+      const response: BlogPostResponse = await getPostsAPI(page);
+      setPosts(response);
 
       const allAuthors: string[] = [];
-      postItems.map((post) => {
+      response.data.map((post: BlogPost) => {
         if (!allAuthors.includes(post.author)) {
           allAuthors.push(post.author);
         }
@@ -44,8 +45,8 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
       setAuthors(allAuthors);
 
       const allTags: string[] = [];
-      postItems.map((post) => {
-        post.tags?.map((tag) => {
+      response.data.map((post: BlogPost) => {
+        post.tags?.map((tag: string) => {
           if (!allTags.includes(tag)) {
             allTags.push(tag);
           }
@@ -60,14 +61,14 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    getPosts();
+    getPosts(1);
   }, []);
 
   const addPost = async (post: Omit<BlogPost, "id">) => {
     setLoading(true);
     try {
       const postItem: BlogPost = await createPostAPI(post);
-      setPosts((prev) => [...prev, postItem]);
+      setPosts((prev) => ({ ...prev, data: [...prev.data, postItem] }));
     } catch (err) {
       setError(err as string);
     } finally {
@@ -79,9 +80,9 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     setLoading(true);
     try {
       const postItem: BlogPost = await editPostAPI(postId, post);
-      const filtered = posts.filter((p: BlogPost) => p.id !== postId);
+      const filtered = posts.data.filter((p: BlogPost) => p.id !== postId);
       filtered.push(postItem);
-      setPosts(filtered);
+      setPosts((prev) => ({ ...prev, data: [...filtered] }));
     } catch (err) {
       setError(err as string);
     } finally {
@@ -92,8 +93,9 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
   const searchPosts = async (query: string) => {
     setLoading(true);
     try {
-      const postItems: BlogPost[] = await searchPostAPI(query);
-      setPosts(postItems);
+      const response: BlogPostResponse = await searchPostAPI(query);
+
+      setPosts(response);
     } catch (err) {
       setError(err as string);
     } finally {
@@ -105,8 +107,8 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     setLoading(true);
     try {
       await deletePostAPI(id);
-      const filtered = posts.filter((p: BlogPost) => p.id !== id);
-      setPosts(filtered);
+      const filtered = posts.data.filter((p: BlogPost) => p.id !== id);
+      setPosts((prev) => ({ ...prev, data: filtered }));
     } catch (err) {
       setError(err as string);
     } finally {
@@ -118,10 +120,10 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     setLoading(true);
     try {
       await bookmarkPostAPI(id);
-      const updated = posts.map((p) =>
+      const updated = posts.data.map((p) =>
         p.id === id ? { ...p, bookmarked: !p.bookmarked } : p
       );
-      setPosts(updated);
+      setPosts((prev) => ({ ...prev, data: updated }));
     } catch (err) {
       setError(err as string);
     } finally {
@@ -133,13 +135,13 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     try {
       let filtered: BlogPost[] = [];
       if (author) {
-        filtered = posts.filter(
+        filtered = posts.data.filter(
           (p) => p.author.toLowerCase() === author.toLowerCase()
         );
       }
 
       if (tag) {
-        for (const p of posts) {
+        for (const p of posts.data) {
           const filteredTags = p.tags.filter(
             (t) => t.toLowerCase() === tag.toLowerCase()
           );
@@ -154,7 +156,6 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
       setError(err as string);
     }
   };
-  // console.log("posts len: ", posts);
 
   return (
     <PostContext.Provider
