@@ -117,11 +117,7 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
   const bookmarkPost = async (id: string) => {
     setLoading(true);
     try {
-      console.log("book", id);
-
-      const res = await bookmarkPostAPI(id);
-      console.log("res: ", res);
-
+      await bookmarkPostAPI(id);
       const updated = posts.map((p) =>
         p.id === id ? { ...p, bookmarked: !p.bookmarked } : p
       );
@@ -134,8 +130,6 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
   };
 
   const filterPost = async (author: string, tag: string) => {
-    console.log("author", author);
-    console.log("tag", tag);
     try {
       let filtered: BlogPost[] = [];
       if (author) {
@@ -149,8 +143,6 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
           const filteredTags = p.tags.filter(
             (t) => t.toLowerCase() === tag.toLowerCase()
           );
-          console.log("filteredTags", filteredTags);
-
           if (filteredTags) {
             filtered.push(p);
             break;
