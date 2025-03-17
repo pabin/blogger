@@ -59,3 +59,13 @@ export const searchPostAPI = async (query: string) => {
     console.log("err searching post!!", err);
   }
 };
+
+export const bookmarkPostAPI = async (postId: string) => {
+  try {
+    await fetch(`${HOST}/posts/${postId}/bookmark`, {
+      method: "PATCH",
+    });
+  } catch (err) {
+    console.log("err bookmarking post!!", err);
+  }
+};

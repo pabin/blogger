@@ -5,16 +5,17 @@ import { useAtom } from "jotai";
 import { useCommentContext } from "../contexts/CommentContext";
 import { BlogPost } from "../types/BlogPost";
 import { visitedPostsAtom } from "../atoms";
+import { usePostContext } from "../contexts/PostsContext";
 
 const ViewPost = () => {
   const [post, setPost] = useState<BlogPost>({});
   const [comment, setComment] = useState({ author: "", content: "" });
   const location = useLocation();
   const commentContext = useCommentContext();
+  const postContext = usePostContext();
   const [visitedPosts, setPostVisit] = useAtom(visitedPostsAtom);
 
   // console.log("post : ", post);
-  // console.log("comment : ", commentContext?.comments);
 
   useEffect(() => {
     setPost(location.state);
@@ -47,6 +48,15 @@ const ViewPost = () => {
       <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
       <div className="text-gray-500 text-sm mb-4">
         By {post.author} • {post.date}
+        <button
+          className="bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600 ml-4 cursor-pointer"
+          onClick={() => {
+            postContext?.bookmarkPost(post.id);
+            setPost((prev) => ({ ...prev, bookmarked: !prev.bookmarked }));
+          }}
+        >
+          {post.bookmarked ? "Remove Bookmark" : "Bookmark Post"}
+        </button>
       </div>
       <p className="text-gray-800 mb-8">{post.content}</p>
 

@@ -8,6 +8,7 @@ import React, {
 
 import { BlogPost, PostContextType } from "../types/BlogPost";
 import {
+  bookmarkPostAPI,
   createPostAPI,
   deletePostAPI,
   editPostAPI,
@@ -92,6 +93,25 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     }
   };
 
+  const bookmarkPost = async (id: string) => {
+    setLoading(true);
+    try {
+      console.log("book", id);
+
+      const res = await bookmarkPostAPI(id);
+      console.log("res: ", res);
+
+      const updated = posts.map((p) =>
+        p.id === id ? { ...p, bookmarked: !p.bookmarked } : p
+      );
+      setPosts(updated);
+    } catch (err) {
+      setError(err as string);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // console.log("posts len: ", posts);
 
   return (
@@ -103,6 +123,7 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
         editPost,
         deletePost,
         searchPosts,
+        bookmarkPost,
         loading,
         error,
       }}
