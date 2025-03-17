@@ -12,6 +12,8 @@ const PostsList = () => {
   const [onSearch, setOnSearch] = useState<boolean>(false);
   const [postId, setPostId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
+  const [tag, setTag] = useState<string>("");
   const postContext = usePostContext();
   const navigate = useNavigate();
   const [visitedPosts, setPostVisit] = useAtom(visitedPostsAtom);
@@ -19,6 +21,11 @@ const PostsList = () => {
   const postIsVisited = (postId: string) => {
     return visitedPosts.includes(postId);
   };
+
+  let postsToRender = postContext?.posts;
+  if (postContext?.filteredPost.length) {
+    postsToRender = postContext?.filteredPost;
+  }
 
   if (postContext?.loading) {
     return (
@@ -86,6 +93,48 @@ const PostsList = () => {
             clear visit history
           </button>
         )}
+
+        <div className="w-128 flex gap-4">
+          <div className="w-64">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Filter By Author
+            </label>
+            <select
+              onChange={(e) => {
+                setTag("");
+                postContext?.filterPost(e.target.value, "");
+              }}
+              className="block w-full p-1 border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Choose</option>
+              {postContext?.authors.map((author) => (
+                <option key={author} value={`${author}`}>
+                  {author}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="w-64">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Filter By Tag
+            </label>
+            <select
+              onChange={(e) => {
+                setAuthor("");
+                postContext?.filterPost("", e.target.value);
+              }}
+              className="block w-full p-1 border border-gray-300 rounded bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Choose</option>
+              {postContext?.tags.map((tag) => (
+                <option key={tag} value={`${tag}`}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b">
@@ -96,7 +145,7 @@ const PostsList = () => {
             </tr>
           </thead>
           <tbody>
-            {postContext?.posts.map((post) => (
+            {postsToRender?.map((post) => (
               <tr
                 key={post.id}
                 className={`border-b hover:bg-gray-100 cursor-pointer ${
@@ -110,6 +159,16 @@ const PostsList = () => {
                   }
                 >
                   {post.title}
+
+                  <br />
+                  {post.tags?.map((tag, index) => (
+                    <button
+                      key={`${tag}-${index}`}
+                      className="inline-flex items-center bg-gray-200 text-gray-800 text-sm font-medium px-2 py-0 rounded-full mr-1 mb-1"
+                    >
+                      {tag}
+                    </button>
+                  ))}
                 </td>
                 <td
                   className="p-2"
@@ -144,7 +203,7 @@ const PostsList = () => {
                       }}
                       className="bg-red-400 text-white px-3 py-1 rounded cursor-pointer"
                     >
-                      {postContext.loading ? "deleting..." : "Delete"}
+                      {postContext?.loading ? "deleting..." : "Delete"}
                     </button>
                   </div>
                 </td>

@@ -23,6 +23,9 @@ export type MyComponentProps = {
 };
 export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [filteredPost, setFilteredPost] = useState<BlogPost[]>([]);
+  const [authors, setAuthors] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +34,24 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     try {
       const postItems: BlogPost[] = await getPostsAPI();
       setPosts(postItems);
+
+      const allAuthors: string[] = [];
+      postItems.map((post) => {
+        if (!allAuthors.includes(post.author)) {
+          allAuthors.push(post.author);
+        }
+      });
+      setAuthors(allAuthors);
+
+      const allTags: string[] = [];
+      postItems.map((post) => {
+        post.tags?.map((tag) => {
+          if (!allTags.includes(tag)) {
+            allTags.push(tag);
+          }
+        });
+      });
+      setTags(allTags);
     } catch (err) {
       setError(err as string);
     } finally {
@@ -112,18 +133,51 @@ export const PostProvider: React.FC<MyComponentProps> = ({ children }) => {
     }
   };
 
+  const filterPost = async (author: string, tag: string) => {
+    console.log("author", author);
+    console.log("tag", tag);
+    try {
+      let filtered: BlogPost[] = [];
+      if (author) {
+        filtered = posts.filter(
+          (p) => p.author.toLowerCase() === author.toLowerCase()
+        );
+      }
+
+      if (tag) {
+        for (const p of posts) {
+          const filteredTags = p.tags.filter(
+            (t) => t.toLowerCase() === tag.toLowerCase()
+          );
+          console.log("filteredTags", filteredTags);
+
+          if (filteredTags) {
+            filtered.push(p);
+            break;
+          }
+        }
+      }
+      setFilteredPost(filtered);
+    } catch (err) {
+      setError(err as string);
+    }
+  };
   // console.log("posts len: ", posts);
 
   return (
     <PostContext.Provider
       value={{
         posts,
+        authors,
+        tags,
+        filteredPost,
         getPosts,
         addPost,
         editPost,
         deletePost,
         searchPosts,
         bookmarkPost,
+        filterPost,
         loading,
         error,
       }}
