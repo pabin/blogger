@@ -1,11 +1,18 @@
 import express, { json } from "express";
+var cors = require("cors");
+
 import { blogRoutes } from "./src/routes/blogRoutes";
-import { commentRoutes } from "./src/routes/commentRoutes";
 
 const app = express();
 const port = 3000;
 
 app.use(json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Only allow requests from this domain
+  })
+);
 
 app.use("/posts", blogRoutes);
 
