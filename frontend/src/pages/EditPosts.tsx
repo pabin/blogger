@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 
-import { usePostContext } from "../context/PostsContext";
+import { usePostContext } from "../contexts/PostsContext";
 import { BlogPost } from "../types/BlogPost";
 
 const EditPost = () => {
