@@ -1,8 +1,13 @@
 import "./App.css";
-import { PostProvider } from "./context/PostsContext";
+import AppProviders from "./contexts/AppProviders";
+import MainRoutes from "./routes/Routes";
 
 function App() {
-  return <PostProvider />;
+  return (
+    <AppProviders>
+      <MainRoutes />
+    </AppProviders>
+  );
 }
 
 export default App;
