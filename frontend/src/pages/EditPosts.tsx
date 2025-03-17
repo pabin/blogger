@@ -28,7 +28,7 @@ const EditPost = () => {
   const handleTagChange = (e) => {
     const tags = e.target.value.split(",");
     const tagsmapped = tags.filter((t: string) => t);
-    setPost((prev) => ({ ...prev, tagsmapped }));
+    setPost((prev) => ({ ...prev, tags: tagsmapped }));
   };
 
   const getTags = () => {
