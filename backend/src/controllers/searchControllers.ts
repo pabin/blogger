@@ -3,19 +3,32 @@ import { promises as fs } from "node:fs";
 
 import { BlogPost } from "../types/BlogPost";
 import { checkIfFileExists } from "../utils/fsUtils";
+import { GetResponse } from "./blogControllers";
 
 const filePath = "src/data/posts.json";
 
 export const searchBlogPosts: RequestHandler<
   unknown,
-  BlogPost[],
+  GetResponse,
   unknown,
-  { q: string }
+  { q: string; page: string }
 > = async (req, res, next) => {
   const query = req.query.q;
+  const page = req.query.page;
+
+  const limit = 15;
+  const pageNo = +page || 1;
+
+  const startIndex = (pageNo - 1) * limit;
+  const endIndex = pageNo * limit;
 
   if (!checkIfFileExists(filePath)) {
-    return res.json([]);
+    return res.json({
+      currentPage: pageNo,
+      totalPages: 0,
+      totalItems: 0,
+      data: [],
+    });
   }
   try {
     const data = await fs.readFile(filePath, "utf8");
@@ -31,7 +44,16 @@ export const searchBlogPosts: RequestHandler<
     }
     filtered.sort((a, b) => Number(b.bookmarked) - Number(a.bookmarked));
 
-    return res.json(filtered);
+    const paginatedData = filtered.slice(startIndex, endIndex);
+
+    const response = {
+      currentPage: pageNo,
+      totalPages: Math.ceil(filtered.length / limit),
+      totalItems: filtered.length,
+      data: paginatedData,
+    };
+
+    return res.json(response);
   } catch (err) {
     next(err);
   }
