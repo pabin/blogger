@@ -21,7 +21,16 @@ export const searchBlogPosts: RequestHandler<
     const data = await fs.readFile(filePath, "utf8");
     const blogPosts: BlogPost[] = JSON.parse(data);
 
-    const filtered = blogPosts.filter((p) => p.title.includes(query));
+    let filtered: BlogPost[] = [];
+    if (query) {
+      filtered = blogPosts.filter((p) =>
+        p.title.toLowerCase().includes(query.toLowerCase())
+      );
+    } else {
+      filtered = blogPosts.filter((item) => item).slice(0, 15);
+    }
+    filtered.sort((a, b) => Number(b.bookmarked) - Number(a.bookmarked));
+
     return res.json(filtered);
   } catch (err) {
     next(err);

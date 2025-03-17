@@ -18,6 +18,8 @@ export const getBlogPosts: RequestHandler<
   try {
     const data = await fs.readFile(filePath, "utf8");
     const blogPosts: BlogPost[] = JSON.parse(data);
+    blogPosts.sort((a, b) => Number(b.bookmarked) - Number(a.bookmarked));
+
     return res.json(blogPosts);
   } catch (err) {
     next(err);
@@ -123,6 +125,7 @@ export const bookmarkBlogPost: RequestHandler<
 
     try {
       await fs.writeFile(filePath, JSON.stringify(updatedPosts));
+
       return res.json({ success: true });
     } catch (err) {
       next(err);
