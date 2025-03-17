@@ -22,6 +22,8 @@ const PostsList = () => {
     return visitedPosts.includes(postId);
   };
 
+  // console.log("postContext?.posts", postContext?.posts);
+
   let postsToRender = postContext?.posts;
   if (postContext?.filteredPost.length) {
     postsToRender = postContext?.filteredPost;
@@ -158,6 +160,9 @@ const PostsList = () => {
                     navigate(`/${slugify(post.title)}`, { state: post })
                   }
                 >
+                  {post.bookmarked && (
+                    <span className="text-yellow-400 pr-1">★</span>
+                  )}
                   {post.title}
 
                   <br />
