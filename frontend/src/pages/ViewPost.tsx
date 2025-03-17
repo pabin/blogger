@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
+import { useAtom } from "jotai";
+
 import { useCommentContext } from "../contexts/CommentContext";
 import { BlogPost } from "../types/BlogPost";
+import { visitedPostsAtom } from "../atoms";
 
 const ViewPost = () => {
   const [post, setPost] = useState<BlogPost>({});
   const [comment, setComment] = useState({ author: "", content: "" });
   const location = useLocation();
   const commentContext = useCommentContext();
+  const [visitedPosts, setPostVisit] = useAtom(visitedPostsAtom);
 
   // console.log("post : ", post);
-  console.log("comment : ", commentContext?.comments);
+  // console.log("comment : ", commentContext?.comments);
 
   useEffect(() => {
     setPost(location.state);
+    if (!visitedPosts.includes(location.state?.id)) {
+      setPostVisit((prev) => [...prev, location.state.id]);
+    }
   }, []);
 
   useEffect(() => {

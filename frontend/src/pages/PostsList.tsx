@@ -1,8 +1,11 @@
-import { Link, useNavigate } from "react-router";
-import { usePostContext } from "../contexts/PostsContext";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useAtom } from "jotai";
+
+import { usePostContext } from "../contexts/PostsContext";
 import Modal from "../components/Modal";
 import { slugify } from "../utils/slugify";
+import { visitedPostsAtom } from "../atoms";
 
 const PostsList = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -11,6 +14,11 @@ const PostsList = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const postContext = usePostContext();
   const navigate = useNavigate();
+  const [visitedPosts, setPostVisit] = useAtom(visitedPostsAtom);
+
+  const postIsVisited = (postId: string) => {
+    return visitedPosts.includes(postId);
+  };
 
   if (postContext?.loading) {
     return (
@@ -31,6 +39,7 @@ const PostsList = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
             />
+
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 cursor-pointer"
               onClick={() => {
@@ -69,6 +78,14 @@ const PostsList = () => {
       </div>
 
       <div className="bg-gray-50 p-4 rounded-lg shadow">
+        {visitedPosts.length > 0 && (
+          <button
+            className="inline-flex items-center bg-blue-400 text-white text-sm font-medium px-3 py-1 rounded-full mr-2 mb-2 hover:bg-blue-500 cursor-pointer"
+            onClick={() => setPostVisit([])}
+          >
+            clear visit history
+          </button>
+        )}
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b">
@@ -82,7 +99,9 @@ const PostsList = () => {
             {postContext?.posts.map((post) => (
               <tr
                 key={post.id}
-                className="border-b hover:bg-gray-100 cursor-pointer"
+                className={`border-b hover:bg-gray-100 cursor-pointer ${
+                  postIsVisited(post.id) ? "font-light" : "font-bold"
+                }`}
               >
                 <td
                   className="p-2"
