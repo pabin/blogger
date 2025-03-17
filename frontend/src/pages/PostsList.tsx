@@ -1,7 +1,8 @@
-import { Link } from "react-router";
-import { usePostContext } from "../context/PostsContext";
+import { Link, useNavigate } from "react-router";
+import { usePostContext } from "../contexts/PostsContext";
 import { useState } from "react";
 import Modal from "../components/Modal";
+import { slugify } from "../utils/slugify";
 
 const PostsList = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -9,6 +10,7 @@ const PostsList = () => {
   const [postId, setPostId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const postContext = usePostContext();
+  const navigate = useNavigate();
 
   if (postContext?.loading) {
     return (
@@ -78,10 +80,35 @@ const PostsList = () => {
           </thead>
           <tbody>
             {postContext?.posts.map((post) => (
-              <tr key={post.id} className="border-b hover:bg-gray-100">
-                <td className="p-2">{post.title}</td>
-                <td className="p-2">{new Date(post.date).toDateString()}</td>
-                <td className="p-2">{post.author}</td>
+              <tr
+                key={post.id}
+                className="border-b hover:bg-gray-100 cursor-pointer"
+              >
+                <td
+                  className="p-2"
+                  onClick={() =>
+                    navigate(`/${slugify(post.title)}`, { state: post })
+                  }
+                >
+                  {post.title}
+                </td>
+                <td
+                  className="p-2"
+                  onClick={() =>
+                    navigate(`/${slugify(post.title)}`, { state: post })
+                  }
+                >
+                  {new Date(post.date).toDateString()}
+                </td>
+                <td
+                  className="p-2"
+                  onClick={() =>
+                    navigate(`/${slugify(post.title)}`, { state: post })
+                  }
+                >
+                  {post.author}
+                </td>
+
                 <td className="p-2 text-right space-x-2">
                   <div className="flex">
                     <Link
@@ -96,7 +123,7 @@ const PostsList = () => {
                         setPostId(post.id);
                         setShowModal(true);
                       }}
-                      className="bg-red-400 text-white px-3 py-1 rounded"
+                      className="bg-red-400 text-white px-3 py-1 rounded cursor-pointer"
                     >
                       {postContext.loading ? "deleting..." : "Delete"}
                     </button>
@@ -114,8 +141,8 @@ const PostsList = () => {
           postContext?.deletePost(postId);
           setShowModal(false);
         }}
-        title="warning"
-        message="hi there how are you"
+        title="Confirm Post Deletion"
+        message="Are you sure you want to delete this post?"
       />
     </div>
   );
