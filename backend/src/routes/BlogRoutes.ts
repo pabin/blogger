@@ -12,6 +12,7 @@ import {
   getComments,
 } from "../controllers/commentControllers";
 import { searchBlogPosts } from "../controllers/searchControllers";
+import { exportBlogPosts } from "../controllers/exportControllers";
 
 export const blogRoutes = Router();
 
@@ -26,3 +27,4 @@ blogRoutes.post("/:id/comments", createComment);
 blogRoutes.delete("/:id/comments/:commentId", deleteComment);
 
 blogRoutes.get("/search", searchBlogPosts);
+blogRoutes.get("/export", exportBlogPosts);
