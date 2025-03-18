@@ -106,7 +106,7 @@ const PostsList = () => {
             <button
               className="inline-flex items-center bg-red-300 text-gray-800 text-sm font-medium px-3 py-1 rounded-full mr-2 mb-2 hover:bg-red-400 cursor-pointer"
               onClick={() => {
-                postContext?.getPosts();
+                postContext?.getPosts(1);
                 setOnSearch(false);
               }}
             >
