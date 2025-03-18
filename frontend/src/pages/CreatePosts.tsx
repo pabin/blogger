@@ -5,7 +5,7 @@ import { usePostContext } from "../contexts/PostsContext";
 import { BlogPost } from "../types/BlogPost";
 
 const CreatePost = () => {
-  const [post, setPost] = useState<BlogPost>({});
+  const [post, setPost] = useState<BlogPost>({ bookmarked: false });
 
   const postContext = usePostContext();
   const navigate = useNavigate();
