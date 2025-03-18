@@ -4,6 +4,7 @@ import { promises as fs } from "node:fs";
 
 import { checkIfFileExists } from "../utils/fsUtils";
 import { Comment } from "../types/Comment";
+import { commentValidation } from "../validations/commentValidator";
 
 const filePath = "src/data/comments.json";
 
@@ -36,6 +37,15 @@ export const createComment: RequestHandler<
   const { id } = req.params;
 
   const data: Partial<Comment> = req.body;
+
+  const result = commentValidation.safeParse(data);
+  if (!result.success) {
+    return res.status(400).json({
+      error: "Invalid comment data",
+      details: result.error.format(),
+    });
+  }
+
   data.id = uuidv4();
   data.date = new Date();
   data.postId = id;

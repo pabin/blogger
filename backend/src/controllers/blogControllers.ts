@@ -4,6 +4,7 @@ import { promises as fs } from "node:fs";
 
 import { BlogPost } from "../types/BlogPost";
 import { checkIfFileExists } from "../utils/fsUtils";
+import { blogPostValidation } from "../validations/blogPostValidator";
 
 const filePath = "src/data/posts.json";
 
@@ -60,6 +61,14 @@ export const createBlogPosts: RequestHandler<
   Partial<BlogPost>
 > = async (req, res, next) => {
   const data: Partial<BlogPost> = req.body;
+  const result = blogPostValidation.safeParse(data);
+  if (!result.success) {
+    return res.status(400).json({
+      error: "Invalid BlogPost data",
+      details: result.error.format(),
+    });
+  }
+
   data.id = uuidv4();
   data.date = new Date();
   data.bookmarked = false;
@@ -92,6 +101,14 @@ export const editBlogPost: RequestHandler<
 > = async (req, res, next) => {
   const { id } = req.params;
   const data: Partial<BlogPost> = req.body;
+
+  const result = blogPostValidation.safeParse(data);
+  if (!result.success) {
+    return res.status(400).json({
+      error: "Invalid BlogPost data",
+      details: result.error.format(),
+    });
+  }
 
   try {
     const postsData = await fs.readFile(filePath, "utf8");
