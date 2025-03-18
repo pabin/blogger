@@ -8,6 +8,7 @@ export const getPostsAPI = async (page: number) => {
     return await response.json();
   } catch (err) {
     console.log("err fetching posts!!", err);
+    return err;
   }
 };
 
@@ -21,6 +22,7 @@ export const createPostAPI = async (post: Omit<BlogPost, "id">) => {
     return await response.json();
   } catch (err) {
     console.log("err adding post!!", err);
+    return err;
   }
 };
 
@@ -37,6 +39,7 @@ export const editPostAPI = async (
     return await response.json();
   } catch (err) {
     console.log("err updating post!!", err);
+    return err;
   }
 };
 
@@ -48,6 +51,7 @@ export const deletePostAPI = async (postId: string) => {
     return await response.json();
   } catch (err) {
     console.log("err deleting post!!", err);
+    return err;
   }
 };
 
@@ -57,15 +61,18 @@ export const searchPostAPI = async (query: string) => {
     return await response.json();
   } catch (err) {
     console.log("err searching post!!", err);
+    return err;
   }
 };
 
 export const bookmarkPostAPI = async (postId: string) => {
   try {
-    await fetch(`${HOST}/posts/${postId}/bookmark`, {
+    const response = await fetch(`${HOST}/posts/${postId}/bookmark`, {
       method: "PATCH",
     });
+    return await response.json();
   } catch (err) {
     console.log("err bookmarking post!!", err);
+    return err;
   }
 };

@@ -8,6 +8,7 @@ export const getCommentsAPI = async (postId: string) => {
     return await response.json();
   } catch (err) {
     console.log("err fetching comments!!", err);
+    return err;
   }
 };
 
@@ -24,13 +25,14 @@ export const createCommentAPI = async (
     return await response.json();
   } catch (err) {
     console.log("err adding comment!!", err);
+    return err;
   }
 };
 
 export const deleteCommentAPI = async (postId: string, commentId: string) => {
   try {
     const response = await fetch(
-      `${HOST}/posts/${postId}/comments/${commentId}`,
+      `${HOST}/posasts/${postId}/comments/${commentId}`,
       {
         method: "DELETE",
       }
@@ -38,5 +40,6 @@ export const deleteCommentAPI = async (postId: string, commentId: string) => {
     return await response.json();
   } catch (err) {
     console.log("err deleting comment!!", err);
+    return err;
   }
 };

@@ -76,9 +76,9 @@ const ViewPost = () => {
                 <p className="text-gray-600">{comment.content}</p>
               </div>
               <button
-                onClick={() =>
-                  commentContext.deleteComment(post.id, comment.id)
-                }
+                onClick={() => {
+                  commentContext.deleteComment(post.id, comment.id);
+                }}
                 className="bg-red-400 text-white px-3 py-1 rounded cursor-pointer h-fit"
               >
                 {commentContext.loading ? "Deleting..." : "Delete"}

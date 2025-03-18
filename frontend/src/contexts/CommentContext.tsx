@@ -15,7 +15,6 @@ export const CommentProvider: React.FC<MyComponentProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // console.log("comments : ", comments);
   const getComments = async (postId: string) => {
     setLoading(true);
     try {
@@ -43,11 +42,13 @@ export const CommentProvider: React.FC<MyComponentProps> = ({ children }) => {
   const deleteComment = async (postId: string, commentId: string) => {
     setLoading(true);
     try {
-      await deleteCommentAPI(postId, commentId);
+      const response = await deleteCommentAPI(postId, commentId);
       const filtered = comments.filter((c: Comment) => c.id !== commentId);
       setComments(filtered);
+      return response;
     } catch (err) {
       setError(err as string);
+      return err;
     } finally {
       setLoading(false);
     }
