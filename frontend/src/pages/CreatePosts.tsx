@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { toast } from "react-toastify";
 
 import { usePostContext } from "../contexts/PostsContext";
 import { BlogPost } from "../types/BlogPost";
@@ -14,7 +13,6 @@ const CreatePost = () => {
   const onHandleSubmit = () => {
     postContext?.addPost(post);
     setPost({});
-    toast("Wow so easy!");
     navigate("/");
   };
 
@@ -25,7 +23,7 @@ const CreatePost = () => {
     setPost((prev) => ({ ...prev, tags: tagsmapped }));
   };
 
-  console.log("post ==> ", post);
+  // console.log("post ==> ", post);
 
   return (
     <div className="max-w-3xl mx-auto mt-10">
