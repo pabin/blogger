@@ -9,7 +9,9 @@ import { usePostContext } from "../contexts/PostsContext";
 
 const ViewPost = () => {
   const [post, setPost] = useState<BlogPost>({});
-  const [comment, setComment] = useState({ author: "", content: "" });
+  const [content, setContent] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
+  // const [comment, setComment] = useState({ author: "", content: "" });
   const location = useLocation();
   const commentContext = useCommentContext();
   const postContext = usePostContext();
@@ -30,8 +32,9 @@ const ViewPost = () => {
 
   // Handle new comment submit
   const handleSubmit = () => {
-    commentContext?.addComment(post.id, { ...comment, postId: post.id });
-    setComment({});
+    commentContext?.addComment(post.id, { author, content, postId: post.id });
+    setContent("");
+    setAuthor("");
   };
 
   return (
@@ -93,17 +96,15 @@ const ViewPost = () => {
           <input
             type="text"
             placeholder="Your Name"
-            // value={comment.author}
-            onChange={(e) => setComment({ ...comment, author: e.target.value })}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             className="w-full p-2 border rounded focus:outline-none focus:ring"
             required
           />
           <textarea
-            // value={comment.content}
+            value={author}
             placeholder="Your Comment"
-            onChange={(e) =>
-              setComment({ ...comment, content: e.target.value })
-            }
+            onChange={(e) => setAuthor(e.target.value)}
             className="w-full p-2 border rounded focus:outline-none focus:ring"
             rows="3"
             required
