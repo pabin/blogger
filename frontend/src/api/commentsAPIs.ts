@@ -32,7 +32,7 @@ export const createCommentAPI = async (
 export const deleteCommentAPI = async (postId: string, commentId: string) => {
   try {
     const response = await fetch(
-      `${HOST}/posasts/${postId}/comments/${commentId}`,
+      `${HOST}/posts/${postId}/comments/${commentId}`,
       {
         method: "DELETE",
       }
