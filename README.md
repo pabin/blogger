@@ -1,7 +1,7 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ERpJHKd2)
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=18692978)
 # CS472 Final Project March 2025: Blog Management Platform
-Build a blog management platform where users can create, and interact with blog posts. 
+Build a blog management platform where users can create, and interact with blog posts.
 
 ### Core Functionality
 * Create, edit, and delete blog posts. Store posts in `posts.json` with fields: `id` (UUID), `title`, `content`, `author`, `tags` (array), `date`, `bookmarked` (boolean).
@@ -11,7 +11,7 @@ Build a blog management platform where users can create, and interact with blog 
 * Filter displayed posts by tags or authors.
 * Add and delete comments on posts. Store comments in `comments.json` with `id`, `postId`, `author`, `content`, `date`.
 * Bookmark important posts. Bookmarked posts appear at the top of the list.
-* Search by post title. 
+* Search by post title.
 * Export all posts as individual Markdown files and download as a `.zip`.
    * Use `json2md` package to generate Markdown files.
    * Use `archiver` package for ZIP compression.
@@ -30,36 +30,36 @@ Build a blog management platform where users can create, and interact with blog 
 * `DELETE /posts/:id/comments/:id`: Delete a comment.
 * `GET /posts/search`: expect a `q` query parameter and return posts that contains the text in the title, if no `q` is passed, return the first 15 posts.
 * `GET /posts/export`: Export all posts as Markdown files in a ZIP.
-  
+
 **Note:** Remember to validate the user input using `Zod`.
 
 ### File-Based Storage Examples:
 posts.json
 
 ```typescript
-[  
-  {  
-    "id": "6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b",  
-    "title": "Introduction to React",  
-    "content": "Lorem ipsum...",  
-    "author": "John Doe",  
-    "tags": ["react", "frontend"],  
-    "date": "2026-01-10T12:34:56Z",  
-    "bookmarked": true  
-  }  
+[
+  {
+    "id": "6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b",
+    "title": "Introduction to React",
+    "content": "Lorem ipsum...",
+    "author": "John Doe",
+    "tags": ["react", "frontend"],
+    "date": "2026-01-10T12:34:56Z",
+    "bookmarked": true
+  }
 ]
 ```
 comments.json
 
 ```typescript
-[  
-  {  
-    "id": "550e8400-e29b-41d4-a716-446655440000",  
-    "postId": "6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b",  
-    "author": "Jane Smith",  
-    "content": "Great post!",  
-    "date": "2026-01-10T13:00:00Z"  
-  }  
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "postId": "6ec0bd7f-11c0-43da-975e-2a8ad9ebae0b",
+    "author": "Jane Smith",
+    "content": "Great post!",
+    "date": "2026-01-10T13:00:00Z"
+  }
 ]
 ```
 ### Tech Stack:
@@ -70,7 +70,7 @@ comments.json
 <ins>**Version Control (10 points):**</ins>
 50% of the grade will be based on the proper use of version control, including clear and descriptive commit messages that follow best practices (e.g., concise, meaningful, and referencing specific tasks or features). Additionally, students must demonstrate consistent daily progress by pushing their work to the remote repository daily throughout the project duration.
 
-   
+
 <ins>**Code Quality and Feature Implementation (10 points):**</ins>
 The remaining 50% of the grade will be awarded based on the quality and completeness of the codebase. This includes successfully implementing all required features, adhering to coding best practices (e.g., clean code, proper input validation using Zod on the backend, responsive and intuitive UI with TailwindCSS, and efficient algorithms), and ensuring the project is functional, well-structured, and free of critical errors.
 
