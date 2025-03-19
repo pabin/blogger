@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { Link, useNavigate } from "react-router";
 
 import { usePostContext } from "../contexts/PostsContext";
 import { BlogPost } from "../types/BlogPost";
+import {
+  postInitialState,
+  postReducer,
+  PostReducerType,
+} from "../reducers/PostsReducer";
 
 const CreatePost = () => {
-  const [post, setPost] = useState<BlogPost>({ bookmarked: false });
+  const [post, dispatch] = useReducer<PostReducerType, Partial<BlogPost>>(
+    postReducer,
+    postInitialState
+  );
 
   const postContext = usePostContext();
   const navigate = useNavigate();
 
   const onHandleSubmit = () => {
     postContext?.addPost(post);
-    setPost({});
+    dispatch({ type: "RESET" });
     navigate("/");
   };
 
@@ -20,10 +28,8 @@ const CreatePost = () => {
   const handleTagChange = (e) => {
     const tags = e.target.value.split(",");
     const tagsmapped = tags.filter((t: string) => t);
-    setPost((prev) => ({ ...prev, tags: tagsmapped }));
+    dispatch({ type: "SET_TAGS", payload: tagsmapped });
   };
-
-  // console.log("post ==> ", post);
 
   return (
     <div className="max-w-3xl mx-auto mt-10">
@@ -49,7 +55,9 @@ const CreatePost = () => {
             <input
               type="text"
               // value={post.title}
-              onChange={(e) => setPost({ ...post, title: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "SET_TITLE", payload: e.target.value })
+              }
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Enter post title"
             />
@@ -62,7 +70,9 @@ const CreatePost = () => {
             <input
               type="text"
               // value={post.author}
-              onChange={(e) => setPost({ ...post, author: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "SET_AUTHOR", payload: e.target.value })
+              }
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Enter author name"
             />
@@ -73,7 +83,9 @@ const CreatePost = () => {
             <textarea
               rows="12"
               // value={post.content}
-              onChange={(e) => setPost({ ...post, content: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "SET_CONTENT", payload: e.target.value })
+              }
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Write your blog content here..."
             ></textarea>
