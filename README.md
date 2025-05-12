@@ -87,8 +87,3 @@ Contact me during office hours (10:00 AM–12:00 PM and 2:00–3:00 PM, Mon–Sa
 Good luck, and happy coding!
 
 _Code Honor Submission Policy: Remember to respect the code honor submission policy. All written code must be original. You may not share any part of your code with other students. Code duplications will results to receiving NC for the final project. Presenting any code as one’s own work when it came from another source is plagiarism, which includes any matching patterns and code snippets, and will affect your grade. The use of AI is not permitted in this assignment. For more details, check the full course policies in the syllabus._
-
-
-### DEMO VIDEO
-https://mum0-my.sharepoint.com/:v:/g/personal/pluitel_miu_edu/EXP9mislbjpCm68UGipngokB-htWETklQObH5Aqo72wRcA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&email=asaad%40miu.edu&e=rJudxl
-
